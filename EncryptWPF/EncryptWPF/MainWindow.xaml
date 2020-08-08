@@ -1,0 +1,29 @@
+﻿<Window x:Class="EncryptWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EncryptWPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Left="250" Top="250" KeyDown="Window_KeyDown">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="7*"/>
+        </Grid.ColumnDefinitions>
+        <Label x:Name="InputLabel" Content="輸入:" HorizontalAlignment="Left" Margin="21,16,0,0" VerticalAlignment="Top" FontSize="36"/>
+        <TextBox x:Name="InputTextBox" HorizontalAlignment="Left" Height="44" Margin="129,28,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="339" FontSize="36" Grid.ColumnSpan="2" TextChanged="InputTextBox_TextChanged"/>
+        <Button x:Name="NewButton" Content="新建" HorizontalAlignment="Left" Margin="28,157,0,0" VerticalAlignment="Top" Width="75" FontSize="36" Click="NewButton_Click"/>
+        <Label x:Name="OutputLabel" Content="輸出:" HorizontalAlignment="Left" Margin="21,72,0,0" VerticalAlignment="Top" FontSize="36"/>
+        <TextBox x:Name="OutputTextBox" HorizontalAlignment="Left" Height="44" Margin="129,84,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="339" FontSize="36" IsEnabled="False" Grid.ColumnSpan="2"/>
+        <Button x:Name="LoadButton" Content="載入" HorizontalAlignment="Left" Margin="118,157,0,0" VerticalAlignment="Top" Width="75" FontSize="36" Grid.ColumnSpan="2" Click="LoadButton_Click"/>
+        <Button x:Name="SaveButton" Content="儲存" HorizontalAlignment="Left" Margin="31.301,157,0,0" VerticalAlignment="Top" Width="75" FontSize="36" Grid.Column="1" Click="SaveButton_Click"/>
+        <Button x:Name="EncodeButton" Content="編碼" HorizontalAlignment="Left" Margin="120.301,157,0,0" VerticalAlignment="Top" Width="75" FontSize="36" Grid.Column="1" Click="EncodeButton_Click"/>
+        <Button x:Name="DecodeButton" Content="解碼" HorizontalAlignment="Left" Margin="208.301,157,0,0" VerticalAlignment="Top" Width="75" FontSize="36" Grid.Column="1" Click="DecodeButton_Click"/>
+        <Button x:Name="CopyButton" Content="拷貝" HorizontalAlignment="Left" Margin="298.301,157,0,0" VerticalAlignment="Top" Width="75" FontSize="36" Grid.Column="1" Click="CopyButton_Click"/>
+        <Button x:Name="ClearButton" Content="清除" HorizontalAlignment="Left" Margin="389.301,157,0,0" VerticalAlignment="Top" Width="75" FontSize="36" Grid.Column="1" Click="ClearButton_Click"/>
+        <TextBlock x:Name="DisplayBlock" HorizontalAlignment="Left" Margin="28,233,0,0" TextWrapping="Wrap" Text="提示訊息" VerticalAlignment="Top" Height="44" Width="698" FontSize="36" Grid.ColumnSpan="2"/>
+        <TextBlock x:Name="DisplayBlock_Code" HorizontalAlignment="Left" Margin="28,290,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="44" Width="651" FontSize="36" Grid.ColumnSpan="2" Text="密碼表:"/>
+
+    </Grid>
+</Window>

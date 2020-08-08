@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1209
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncryptWPF", "EncryptWPF\EncryptWPF.csproj", "{ABD8F6B8-C4C8-42AF-BDC0-324A1F196280}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ABD8F6B8-C4C8-42AF-BDC0-324A1F196280}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABD8F6B8-C4C8-42AF-BDC0-324A1F196280}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABD8F6B8-C4C8-42AF-BDC0-324A1F196280}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABD8F6B8-C4C8-42AF-BDC0-324A1F196280}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1D87644F-BF40-4764-A82F-D543B1F481C7}
+	EndGlobalSection
+EndGlobal
