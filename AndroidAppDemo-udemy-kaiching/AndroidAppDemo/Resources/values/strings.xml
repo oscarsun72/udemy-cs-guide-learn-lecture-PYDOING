@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">編密碼小工具</string>
+    <string name="start_button">開始編碼</string>
+    <string name="encode_button">編碼</string>
+    <string name="copy_button">拷貝</string>
+    <string name="return_button">回首頁</string>
+</resources>
