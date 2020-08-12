@@ -1,4 +1,11 @@
 <resources>
-    <string name="app_name">編密碼小工具</string>
+  <!--"app_name"應用程式的title-->
+    <string name="app_name">編密碼小工具(佛弟子孫守真任真甫敬斆)</string>
+    <string name="start_button">開始編碼</string>
+    <string name="text_view">結果是</string>
+    <string name="button_home">回首頁</string>
+    <string name="button_copy">拷貝結果的文字</string>
+    <string name="button_encode">編碼</string>
+    <string name="button_decode">解碼</string>
     <string name="action_settings">Settings</string>
 </resources>
