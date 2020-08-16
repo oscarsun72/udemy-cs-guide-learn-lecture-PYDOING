@@ -29,7 +29,8 @@ namespace GuessGameAndroidPractise
             Button btn = FindViewById<Button>(Resource.Id.button1);
             int i=0;//以後再研究ViewGroup
             //ViewGroup thisViews = (ViewGroup) FindViewById(Android.Resource.Id.Content);            
-            LinearLayout gameLayout =(LinearLayout) FindViewById<LinearLayout>
+            //LinearLayout就是一種ViewGroup，其實就是View的容器（container）
+            LinearLayout gameLayout =FindViewById<LinearLayout>
                 (Resource.Id.linearLayoutGame);            
             LinearLayout gameLayoutLayout = new LinearLayout(gameLayout.Context);
             for (int j = 0; j < gameLayout.ChildCount; j++)

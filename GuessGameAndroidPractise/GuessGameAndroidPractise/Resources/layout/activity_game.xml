@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:tag="linearLayoutGame"
-    android:id="@+id/linearLayoutGame">
+    android:id="@+id/linearLayoutGame"><!--XML的註解寫法：要調用就一定要設定id屬性值-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
