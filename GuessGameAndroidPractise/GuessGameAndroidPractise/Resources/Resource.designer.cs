@@ -4317,49 +4317,52 @@ namespace GuessGameAndroidPractise
 			public const int buttonNewGame = 2131558453;
 			
 			// aapt resource value: 0x7F0D0036
-			public const int buttonReset = 2131558454;
+			public const int buttonNum = 2131558454;
 			
 			// aapt resource value: 0x7F0D0037
-			public const int character_counter_content_description = 2131558455;
+			public const int buttonReset = 2131558455;
 			
 			// aapt resource value: 0x7F0D0038
-			public const int character_counter_pattern = 2131558456;
+			public const int character_counter_content_description = 2131558456;
 			
 			// aapt resource value: 0x7F0D0039
-			public const int fab_transformation_scrim_behavior = 2131558457;
+			public const int character_counter_pattern = 2131558457;
 			
 			// aapt resource value: 0x7F0D003A
-			public const int fab_transformation_sheet_behavior = 2131558458;
+			public const int fab_transformation_scrim_behavior = 2131558458;
 			
 			// aapt resource value: 0x7F0D003B
-			public const int hide_bottom_view_on_scroll_behavior = 2131558459;
+			public const int fab_transformation_sheet_behavior = 2131558459;
 			
 			// aapt resource value: 0x7F0D003C
-			public const int mtrl_chip_close_icon_content_description = 2131558460;
+			public const int hide_bottom_view_on_scroll_behavior = 2131558460;
 			
 			// aapt resource value: 0x7F0D003D
-			public const int password_toggle_content_description = 2131558461;
+			public const int mtrl_chip_close_icon_content_description = 2131558461;
 			
 			// aapt resource value: 0x7F0D003E
-			public const int path_password_eye = 2131558462;
+			public const int password_toggle_content_description = 2131558462;
 			
 			// aapt resource value: 0x7F0D003F
-			public const int path_password_eye_mask_strike_through = 2131558463;
+			public const int path_password_eye = 2131558463;
 			
 			// aapt resource value: 0x7F0D0040
-			public const int path_password_eye_mask_visible = 2131558464;
+			public const int path_password_eye_mask_strike_through = 2131558464;
 			
 			// aapt resource value: 0x7F0D0041
-			public const int path_password_strike_through = 2131558465;
+			public const int path_password_eye_mask_visible = 2131558465;
 			
 			// aapt resource value: 0x7F0D0042
-			public const int search_menu_title = 2131558466;
+			public const int path_password_strike_through = 2131558466;
 			
 			// aapt resource value: 0x7F0D0043
-			public const int status_bar_notification_info_overflow = 2131558467;
+			public const int search_menu_title = 2131558467;
 			
 			// aapt resource value: 0x7F0D0044
-			public const int textView1 = 2131558468;
+			public const int status_bar_notification_info_overflow = 2131558468;
+			
+			// aapt resource value: 0x7F0D0045
+			public const int textView1 = 2131558469;
 			
 			static String()
 			{

@@ -11,6 +11,7 @@
     <string name="button8">8</string>
     <string name="button9">9</string>
     <string name="button0">0</string>
+    <string name="buttonNum">buttonNum</string>
     <string name="buttonNewGame">新遊戲</string>
     <string name="buttonReset">重選位數</string>
     <string name="action_settings">Settings</string>
