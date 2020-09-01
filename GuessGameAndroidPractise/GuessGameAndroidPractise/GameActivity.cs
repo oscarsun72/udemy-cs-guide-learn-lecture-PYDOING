@@ -160,10 +160,10 @@ namespace GuessGameAndroidPractise
         void setButtonEnabledFasle_traverse_any_view_hierarchy_in_android()
         {
             View view = FindViewById<LinearLayout>(Resource.Id.linearLayoutGame);
-            //int viewsCount = traverseViewGroup_recursion_EnabledFalse(view);
-            int viewsCount = traverseViewGroup_EnabledFalse(view);
+            int viewsCount = traverseViewGroup_recursion_EnabledFalse(view);
+            //int viewsCount = traverseViewGroup_EnabledFalse(view);
         }
-
+        //〈Android 算法：遍历ViewGroup找出所有子View〉https://blog.csdn.net/l707941510/article/details/82912526
         int traverseViewGroup_recursion_EnabledFalse(View view)
         {
             if (view == null) return 0;
@@ -204,7 +204,7 @@ namespace GuessGameAndroidPractise
             return viewCount;
 
         }
-        public int traverseViewGroup_EnabledFalse(View view)
+        int traverseViewGroup_EnabledFalse(View view)
         {
             if (view == null) return 0;
             int viewCount = 0;
