@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:text="@string/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minWidth="25px"
+        android:minHeight="50px"
+        android:id="@+id/textView1"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout1">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/buttonNum3"
+            android:text="@string/button3"/>
+        <Button
+            android:text="@string/button4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/buttonNum4" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="25px"
+        android:minWidth="25px"
+        android:id="@+id/linearLayout2"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonNum5"
+            android:text="@string/button5"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/buttonNum6"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/button6"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+</LinearLayout>

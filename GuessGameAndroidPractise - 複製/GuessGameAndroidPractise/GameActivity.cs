@@ -109,11 +109,11 @@ namespace GuessGameAndroidPractise {
 
     [Activity (Label = "GameActivity")]
     public class GameActivity : Activity {
-        //OnCreate就是在初始化，相當於Open、Load、Initialize
+        //OnCreate就是在初始化
         protected override void OnCreate (Bundle savedInstanceState) {
             base.OnCreate (savedInstanceState);
 
-            // Create your application here//此則相當於 SetFocus、Activate、Show
+            // Create your application here
             SetContentView (Resource.Layout.activity_game);
 
             //將數字按鈕設定為無效，不可按下：
@@ -121,35 +121,25 @@ namespace GuessGameAndroidPractise {
             int i = 0; //以後再研究ViewGroup
                        //ViewGroup thisViews = (ViewGroup) FindViewById(Android.Resource.Id.Content);            
                        //LinearLayout就是一種ViewGroup，其實就是View的容器（container）
-                       //LinearLayout gameLayout = FindViewById<LinearLayout>
-                       //    (Resource.Id.linearLayoutGame);
             LinearLayout gameLayout = FindViewById<LinearLayout>
-                (Resource.Id.linearLayout1);
-            //MyViewGroup gamelayout = new MyViewGroup(gameLayout.Context);            
-            //gamelayout.ChildCount=gameLayout.ChildCount;
-            //for (int j = 0; j < gameLayout.ChildCount; j++)
-            //{
-            //    View v = gameLayout.GetChildAt(j);
-            //    gameLayout.RemoveView(v);
-            //    gamelayout.AddView(v);
+                (Resource.Id.linearLayoutGame);            
+            MyViewGroup gamelayout = new MyViewGroup(gameLayout.Context);            
+            gamelayout.ChildCount=gameLayout.ChildCount;
+            for (int j = 0; j < gameLayout.ChildCount; j++)
+            {
+                View v = gameLayout.GetChildAt(j);
+                gameLayout.RemoveView(v);
+                gamelayout.AddView(v);
 
-            //}
-            //LinearLayout gameLayout = FindViewById<LinearLayout>
-            //    (Resource.Id.linearLayout1);
-            ////空的ArrayList
+            }
+                //LinearLayout gameLayout = FindViewById<LinearLayout>
+                //    (Resource.Id.linearLayout1);
+                ////空的ArrayList
             //Java.Util.ArrayList jArraylist = new Java.Util.ArrayList ();
-            //空的IList<View>
-            IList<View> jArraylist = new List<View>();
             Java.Lang.ICharSequence vs=new Java.Lang.String("button");//https://forums.xamarin.com/discussion/37716/how-to-convert-net-string-to-java-lang-icharsequence    https://csharp.hotexamples.com/examples/-/ICharSequence/-/php-icharsequence-class-examples.html       
-            /*在.NET(就是C#程式庫）中，gameLayout這樣調用FindViewsWithText
-                *其實是以View在在調用，因為C#程式庫在ViewGroup中
-                    *沒有覆寫View中的這個方法
-                *由此測試發現Xamarin的C# 在ViewGropu的實作，似乎並沒有覆寫View的此一方法
-                故其執行完後，jArraylist的Count屬性依然是0。*/
-            gameLayout.FindViewsWithText(jArraylist,
-                    vs,FindViewsWith.ContentDescription);
-            //gamelayout.FindViewsWithText(jArraylist,
-            //vs,FindViewsWith.ContentDescription);
+            IList<View> jArraylist = new List<View>();
+            gamelayout.FindViewsWithText(jArraylist,
+                vs,FindViewsWith.ContentDescription);
 
             LinearLayout gameLayoutLayout = new LinearLayout (gameLayout.Context);
             //for (int j = 0; j < gameLayout.ChildCount; j++)
@@ -165,8 +155,7 @@ namespace GuessGameAndroidPractise {
             ////        FindViewsWith.Text);
 
             ////}
-            //A way to easily traverse any view hierarchy in Android －－此亦Java版的 https://gist.github.com/gelitenight/7999448
-            //以下為末學自己實作的，但也僅止於二層ViewGropu（view hierarchy ）關係而已
+
             for (int j = 0; j < gameLayout.ChildCount; j++) {
                 View v = gameLayout.GetChildAt (j);
                 if (v.GetType ().FullName.IndexOf ("Button") != -1) { //判斷型別是否是Button

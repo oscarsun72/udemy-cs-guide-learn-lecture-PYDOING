@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">猜數字遊戲</string>
+    <string name="textView1">請選擇所要猜測的數字數量</string>
+    <string name="button1">1</string>
+    <string name="button2">2</string>
+    <string name="button3">3</string>
+    <string name="button4">4</string>
+    <string name="button5">5</string>
+    <string name="button6">6</string>
+    <string name="button7">7</string>
+    <string name="button8">8</string>
+    <string name="button9">9</string>
+    <string name="button0">0</string>
+    <string name="buttonNewGame">新遊戲</string>
+    <string name="buttonReset">重選位數</string>
+    <string name="action_settings">Settings</string>
+</resources>
