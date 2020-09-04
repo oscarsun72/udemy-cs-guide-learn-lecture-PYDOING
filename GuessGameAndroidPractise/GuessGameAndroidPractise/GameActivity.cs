@@ -1,19 +1,26 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Xml;//XmlDocument.GetElementsByTagName 方法要用
 using Android.Animation;
 using Android.App;
 using Android.Content;
+using Android.Icu.Text;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.Widget;
 using Android.Views;
 using Android.Widget;
+using Android.Webkit;
+using Java.IO;
 //using Java.Lang;
 //using Java.Lang.Reflect;
 using Java.Util;
+using Android.Support.V7.Content.Res;
 
 namespace GuessGameAndroidPractise
 {
@@ -160,9 +167,45 @@ namespace GuessGameAndroidPractise
         void setButtonEnabledFasle_traverse_any_view_hierarchy_in_android()
         {
             View view = FindViewById<LinearLayout>(Resource.Id.linearLayoutGame);
-            int viewsCount = traverseViewGroup_recursion_EnabledFalse(view);
+            //凡3種方式來巡覽遍歷所有的 View Button：
+            traverseViewGroup_GetElementsByTagName_EnabledFalse();//此法乃張凱慶老師菩薩所示者，詳：https://www.udemy.com/course/cs-guide/learn/lecture/17071446#questions/12316382/ 
+            //int viewsCount = traverseViewGroup_recursion_EnabledFalse(view);
             //int viewsCount = traverseViewGroup_EnabledFalse(view);
         }
+
+        //用XmlDocument.GetElementsByTagName 方法來遍歷巡覽View https://docs.microsoft.com/zh-tw/dotnet/api/system.xml.xmldocument.getelementsbytagname?view=netcore-3.1#System_Xml_XmlDocument_GetElementsByTagName_System_String_
+        void traverseViewGroup_GetElementsByTagName_EnabledFalse()
+        {
+            XmlDocument doc = new XmlDocument();
+            //XmlReader xmrder = Application.Resources.GetLayout(2131427356);
+            XmlReader xmrder = Application.Resources.GetLayout(Resource.Layout.activity_game);
+            doc.Load(xmrder);
+            //下列網頁說明所示的R類別，其實是Java中的實作，在C#中則是如上，直接用「Resources」這個類別，就是R類別！
+            //doc=R.layout.activity_game;// error :https://developer.android.com/guide/topics/resources/accessing-resources#ResourcesFromCode
+                      
+            XmlNodeList xmlNodeList = doc.GetElementsByTagName("Button");
+            foreach (XmlNode item in xmlNodeList)
+            {
+                foreach (XmlAttribute xa in item.Attributes)
+                {
+                    //if (xa.Name=="p0:contentDescription")
+                    if (xa.Name.Contains("contentDescription"))
+                    {
+                        string contentDescription = item.Attributes["p0:contentDescription"].Value;
+                        if (contentDescription != null
+                            && contentDescription.Contains("@"+Resource.String.buttonNum))
+                        {
+                            FindViewById<Button>                                
+                                (int.Parse(item.Attributes["p0:id"].Value.Substring(1)))
+                                .Enabled=false;//Name="p0:id", Value="@2131230760"//要去掉首位「@」符
+                            break;
+                        }
+                    } 
+                }
+            }
+        }
+
+
         //〈Android 算法：遍历ViewGroup找出所有子View〉https://blog.csdn.net/l707941510/article/details/82912526
         int traverseViewGroup_recursion_EnabledFalse(View view)
         {
@@ -186,7 +229,7 @@ namespace GuessGameAndroidPractise
                     {
                         viewCount++;
                         var contentDescription = vw.ContentDescription;
-                        if (contentDescription != null && 
+                        if (contentDescription != null &&
                             contentDescription.IndexOf("buttonNum") > -1)
                             vw.Enabled = false;
 
@@ -197,7 +240,7 @@ namespace GuessGameAndroidPractise
             {
                 viewCount++;
                 var contentDescription = view.ContentDescription;
-                if (contentDescription != null 
+                if (contentDescription != null
                     && contentDescription.IndexOf("buttonNum") > -1)
                     view.Enabled = false;
             }
