@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
+//using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
+//using System.Reflection;
+//using System.Text;
 using System.Xml;//XmlDocument.GetElementsByTagName 方法要用
-using Android.Animation;
+//using Android.Animation;
 using Android.App;
 using Android.Content;
-using Android.Icu.Text;
+using Android.Drm;
+//using Android.Icu.Text;
 using Android.OS;
-using Android.Runtime;
-using Android.Support.V4.Widget;
+//using Android.Runtime;
+//using Android.Support.V4.Widget;
 using Android.Views;
 using Android.Widget;
-using Java.IO;
+//using Java.IO;
 //using Java.Lang;
 //using Java.Lang.Reflect;
-using Java.Util;
-using Android.Support.V7.Content.Res;
-using System.ComponentModel;
+//using Java.Util;
+//using Android.Support.V7.Content.Res;
+//using System.ComponentModel;
 
 namespace GuessGameAndroidPractise
 {
@@ -144,58 +145,101 @@ namespace GuessGameAndroidPractise
             base.OnCreate(savedInstanceState);
 
             // Create your application here//此則相當於 SetFocus、Activate、Show
-            SetContentView(Resource.Layout.activity_game);
+            SetContentView(Resource.Layout.activity_game);//參考C#的資源是用Resource（沒有尾綴s），可是參考Android(Java)的資源，是用Application.Resources
+
+            //設定進入此畫面（活頁Activity）時所要顯示的指示文字
+            TextView textView = FindViewById<TextView>(
+                Resource.Id.scrollViewTextV);
+            textView.Text = Application.GetString(
+                Resource.String.game_start);
+            textView.TextSize = 26;
 
             //將數字按鈕設定為無效，不可按下：
-            setButtonEnabledFasle_traverse_any_view_hierarchy_in_android();
+            setButtonEnabled_traverse_any_view_hierarchy_in_android(
+                whatTraverseMethodToBeRun.xml, false);
 
+            //準備返回主表單（主視圖）用
             Intent main = new Intent(this, typeof(MainActivity));
-            Button btnReset = FindViewById<Button>(Resource.Id.buttonReset);
-            btnReset.Click += (sender, e) =>
+
+            //準備對「重選位數」按鈕操作用
+            Button btnResetDigit = FindViewById<Button>(Resource.Id.buttonReset);
+            btnResetDigit.Click += (sender, e) =>//C#事件程序的寫法
             {
                 StartActivity(main);
             };
 
+            //準備對「新遊戲」按鈕操作用
             Button btnNewGame = FindViewById<Button>(Resource.Id.buttonNewGame);
             btnNewGame.Click += (sender, e) =>
             {
-                StartActivity(main);
+                //數字按鈕生效
+                setButtonEnabled_traverse_any_view_hierarchy_in_android(
+                    whatTraverseMethodToBeRun.xml, true);//準備開始遊戲
+                //顯示提示文字
+                textView.Text = Application.GetString(
+                    Resource.String.game_started);
             };
+
+
 
         }
 
-        void setButtonEnabledFasle_traverse_any_view_hierarchy_in_android()
+        //數字按鈕的事件程序，這也要用到遍歷巡覽Button，所以遍歷巡覽操作要獨立出來了
+        void btnNumEvent()
+        {
+
+        }
+
+        //遍歷巡覽操作獨立出來以供呼叫端調用
+        void traverseViews() { 
+
+        }
+
+        enum whatTraverseMethodToBeRun
+        {
+            xml, recursion, withoutRecursion
+        }
+
+        void setButtonEnabled_traverse_any_view_hierarchy_in_android(
+            whatTraverseMethodToBeRun method, bool setEnabled,
+            chooseAXmlMethodforTraverseViewGroup c
+                =chooseAXmlMethodforTraverseViewGroup.SelectNodes)
         {
             //凡4種方式來巡覽遍歷所有的 View Button：
-            traverseViewGroup_Xml_Enabled(
-                chooseAXmlMethodforTraverseViewGroup.SelectNodes_XmlNamespaceManager 
-                ,false);
-            //traverseViewGroup_SelectNodes_Enabled(false);//此法乃由GetElementsByTagName線上說明而知者
-            //traverseViewGroup_GetElementsByTagName_EnabledFalse();//此法乃張凱慶老師菩薩所示者，詳：https://www.udemy.com/course/cs-guide/learn/lecture/17071446#questions/12316382/ 
-            
-            ////此行僅供其以下2行用
-            //View view = FindViewById<LinearLayout>(Resource.Id.linearLayoutGame);
-            //int viewsCount = traverseViewGroup_recursion_EnabledFalse(view);//遞歸（recursion）
-            //int viewsCount = traverseViewGroup_EnabledFalse(view);//不遞迴（recursion）
+            switch (method)
+            {
+                case whatTraverseMethodToBeRun.xml:
+                    switch (c)
+                    {
+                        case chooseAXmlMethodforTraverseViewGroup.GetElementsByTagName:
+                        case chooseAXmlMethodforTraverseViewGroup.SelectNodes:
+                        case chooseAXmlMethodforTraverseViewGroup.SelectNodes_XmlNamespaceManager:
+                            traverseViewGroup_Xml_Enabled(c,setEnabled);
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case whatTraverseMethodToBeRun.recursion:
+                    View view = FindViewById<LinearLayout>(Resource.Id.linearLayoutGame);
+                    int viewsCount = traverseViewGroup_recursion_EnabledFalse(view,setEnabled);//遞歸（recursion）
+                    break;
+                case whatTraverseMethodToBeRun.withoutRecursion:
+                    View v = FindViewById<LinearLayout>(Resource.Id.linearLayoutGame);
+                    int viewsCnt = traverseViewGroup_EnabledFalse(v,setEnabled);//不遞迴（recursion）
+                    break;
+                default:
+                    break;
+            }
+
+
+
         }
 
         enum chooseAXmlMethodforTraverseViewGroup
         {
             GetElementsByTagName, SelectNodes, SelectNodes_XmlNamespaceManager
         }
-
-        //用XmlNode.SelectNodes 方法來遍歷巡覽View https://docs.microsoft.com/zh-tw/dotnet/api/system.xml.xmlnode.selectnodes?view=netcore-3.1
-        //void traverseViewGroup_SelectNodes_XmlNamespaceManager_Enabled(bool setEnabled)
-        //{
-        //    XmlDocument doc = new XmlDocument();
-        //    doc.Load(Application.Resources.GetLayout(Resource.Layout.activity_game));
-        //    XmlElement xmlElement = doc.DocumentElement;
-        //    XmlNamespaceManager xmlNamespaceManager = new XmlNamespaceManager(doc.NameTable);
-        //    xmlNamespaceManager.AddNamespace("android", "http://schemas.android.com/apk/res/android");
-        //    XmlNodeList xmlNodeList = xmlElement.SelectNodes("//Button", xmlNamespaceManager);
-        //    /**…………**/
-        //}
-
 
         //用Xml提供的方法來遍歷巡覽View https://docs.microsoft.com/zh-tw/dotnet/api/system.xml.xmlnode.selectnodes?view=netcore-3.1
         void traverseViewGroup_Xml_Enabled(chooseAXmlMethodforTraverseViewGroup c, bool setEnabled)
@@ -280,7 +324,7 @@ namespace GuessGameAndroidPractise
 
 
         //用遞迴。〈Android 算法：遍历ViewGroup找出所有子View〉https://blog.csdn.net/l707941510/article/details/82912526
-        int traverseViewGroup_recursion_EnabledFalse(View view)
+        int traverseViewGroup_recursion_EnabledFalse(View view,bool setEnabled)
         {
             if (view == null) return 0;
             int viewCount = 0;//宣告應該在遞歸（recursion）時不會被覆寫，因其有int冠前也
@@ -296,7 +340,8 @@ namespace GuessGameAndroidPractise
                     {
                         //遞歸（recursion）
                         viewCount +=
-                            traverseViewGroup_recursion_EnabledFalse(vw);
+                            traverseViewGroup_recursion_EnabledFalse(
+                                vw,setEnabled);
                     }
                     else
                     {
@@ -304,7 +349,7 @@ namespace GuessGameAndroidPractise
                         var contentDescription = vw.ContentDescription;
                         if (contentDescription != null &&
                             contentDescription.IndexOf("buttonNum") > -1)
-                            vw.Enabled = false;
+                            vw.Enabled = setEnabled;
 
                     }
                 }
@@ -315,14 +360,14 @@ namespace GuessGameAndroidPractise
                 var contentDescription = view.ContentDescription;
                 if (contentDescription != null
                     && contentDescription.IndexOf("buttonNum") > -1)
-                    view.Enabled = false;
+                    view.Enabled = setEnabled;
             }
             return viewCount;
 
         }
 
         //不用遞迴（recursion）
-        int traverseViewGroup_EnabledFalse(View view)
+        int traverseViewGroup_EnabledFalse(View view, bool setEnabled)
         {
             if (view == null) return 0;
             int viewCount = 0;
@@ -349,7 +394,7 @@ namespace GuessGameAndroidPractise
                             var contentDescription = vw.ContentDescription;
                             if (contentDescription != null &&
                                 contentDescription.IndexOf("buttonNum") > -1)
-                                vw.Enabled = false;
+                                vw.Enabled = setEnabled;
                         }
                     }
 
@@ -361,7 +406,7 @@ namespace GuessGameAndroidPractise
                 var contentDescription = view.ContentDescription;
                 if (contentDescription != null &&
                     contentDescription.IndexOf("buttonNum") > -1)
-                    view.Enabled = false;
+                    view.Enabled = setEnabled;
             }
 
             return viewCount;

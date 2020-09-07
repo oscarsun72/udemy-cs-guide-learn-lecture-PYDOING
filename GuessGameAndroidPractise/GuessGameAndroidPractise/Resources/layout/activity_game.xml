@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:tag="linearLayoutGame"
-    android:id="@+id/linearLayoutGame"><!--XML的註解寫法：要調用就一定要設定id屬性值-->
+    android:id="@+id/linearLayoutGame"
+    tools:gridSpec="1|8|#0093eeff|K:#ee8700ff:16,l:72,l:16,r|S:#83ee00ff:16,0,l:16,56,l:16,0,r">
+    <!--XML的註解寫法：要調用就一定要設定id屬性值-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout1"
         android:orientation="horizontal">
-        android:contentDescription="button"
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button1"            
+            android:id="@+id/button1"
             android:text="@string/button1"
             android:contentDescription="@string/buttonNum"
             android:layout_weight="1"/>
@@ -40,11 +42,11 @@
             android:text="@string/button4"
             android:contentDescription="@string/buttonNum"
             android:layout_weight="1"/>
-        </LinearLayout>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">        
+        android:orientation="horizontal">
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -112,7 +114,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/scrollViewTextV"/>
+            android:id="@+id/scrollViewTextV"             
+            />
 
     </ScrollView>
 </LinearLayout>

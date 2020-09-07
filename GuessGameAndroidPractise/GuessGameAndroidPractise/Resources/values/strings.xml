@@ -15,4 +15,6 @@
     <string name="buttonNewGame">新遊戲</string>
     <string name="buttonReset">重選位數</string>
     <string name="action_settings">Settings</string>
+    <string name="game_start">"要開始遊戲，請按「新遊戲」按鈕……"</string>
+    <string name="game_started">"遊戲開始，請按數字按鈕來猜數字……"</string>
 </resources>
