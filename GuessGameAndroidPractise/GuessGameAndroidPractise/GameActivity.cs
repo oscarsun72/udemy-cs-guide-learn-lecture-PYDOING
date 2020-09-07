@@ -20,6 +20,7 @@ using Java.IO;
 //using Java.Lang.Reflect;
 using Java.Util;
 using Android.Support.V7.Content.Res;
+using System.ComponentModel;
 
 namespace GuessGameAndroidPractise
 {
@@ -165,47 +166,120 @@ namespace GuessGameAndroidPractise
 
         void setButtonEnabledFasle_traverse_any_view_hierarchy_in_android()
         {
-            View view = FindViewById<LinearLayout>(Resource.Id.linearLayoutGame);
-            //凡3種方式來巡覽遍歷所有的 View Button：
-            traverseViewGroup_GetElementsByTagName_EnabledFalse();//此法乃張凱慶老師菩薩所示者，詳：https://www.udemy.com/course/cs-guide/learn/lecture/17071446#questions/12316382/ 
-            //int viewsCount = traverseViewGroup_recursion_EnabledFalse(view);
-            //int viewsCount = traverseViewGroup_EnabledFalse(view);
+            //凡4種方式來巡覽遍歷所有的 View Button：
+            traverseViewGroup_Xml_Enabled(
+                chooseAXmlMethodforTraverseViewGroup.SelectNodes_XmlNamespaceManager 
+                ,false);
+            //traverseViewGroup_SelectNodes_Enabled(false);//此法乃由GetElementsByTagName線上說明而知者
+            //traverseViewGroup_GetElementsByTagName_EnabledFalse();//此法乃張凱慶老師菩薩所示者，詳：https://www.udemy.com/course/cs-guide/learn/lecture/17071446#questions/12316382/ 
+            
+            ////此行僅供其以下2行用
+            //View view = FindViewById<LinearLayout>(Resource.Id.linearLayoutGame);
+            //int viewsCount = traverseViewGroup_recursion_EnabledFalse(view);//遞歸（recursion）
+            //int viewsCount = traverseViewGroup_EnabledFalse(view);//不遞迴（recursion）
         }
 
-        //用XmlDocument.GetElementsByTagName 方法來遍歷巡覽View https://docs.microsoft.com/zh-tw/dotnet/api/system.xml.xmldocument.getelementsbytagname?view=netcore-3.1#System_Xml_XmlDocument_GetElementsByTagName_System_String_
-        void traverseViewGroup_GetElementsByTagName_EnabledFalse()
+        enum chooseAXmlMethodforTraverseViewGroup
+        {
+            GetElementsByTagName, SelectNodes, SelectNodes_XmlNamespaceManager
+        }
+
+        //用XmlNode.SelectNodes 方法來遍歷巡覽View https://docs.microsoft.com/zh-tw/dotnet/api/system.xml.xmlnode.selectnodes?view=netcore-3.1
+        //void traverseViewGroup_SelectNodes_XmlNamespaceManager_Enabled(bool setEnabled)
+        //{
+        //    XmlDocument doc = new XmlDocument();
+        //    doc.Load(Application.Resources.GetLayout(Resource.Layout.activity_game));
+        //    XmlElement xmlElement = doc.DocumentElement;
+        //    XmlNamespaceManager xmlNamespaceManager = new XmlNamespaceManager(doc.NameTable);
+        //    xmlNamespaceManager.AddNamespace("android", "http://schemas.android.com/apk/res/android");
+        //    XmlNodeList xmlNodeList = xmlElement.SelectNodes("//Button", xmlNamespaceManager);
+        //    /**…………**/
+        //}
+
+
+        //用Xml提供的方法來遍歷巡覽View https://docs.microsoft.com/zh-tw/dotnet/api/system.xml.xmlnode.selectnodes?view=netcore-3.1
+        void traverseViewGroup_Xml_Enabled(chooseAXmlMethodforTraverseViewGroup c, bool setEnabled)
         {
             XmlDocument doc = new XmlDocument();
-            //XmlReader xmrder = Application.Resources.GetLayout(2131427356);
-            XmlReader xmrder = Application.Resources.GetLayout(Resource.Layout.activity_game);
-            doc.Load(xmrder);
-            //下列網頁說明所示的R類別，其實是Java中的實作，在C#中則是如上，直接用「Resources」這個類別，就是R類別！
-            //doc=R.layout.activity_game;// error :https://developer.android.com/guide/topics/resources/accessing-resources#ResourcesFromCode
-                      
-            XmlNodeList xmlNodeList = doc.GetElementsByTagName("Button");
-            foreach (XmlNode item in xmlNodeList)
+            doc.Load(Application.Resources.GetLayout(Resource.Layout.activity_game));
+            XmlElement xmlElement = doc.DocumentElement;
+            XmlNodeList xmlNodeList = doc.ChildNodes;
+            switch (c)
             {
-                foreach (XmlAttribute xa in item.Attributes)
+                case chooseAXmlMethodforTraverseViewGroup.GetElementsByTagName:
+                    xmlNodeList = doc.GetElementsByTagName("Button");
+                    break;
+                case chooseAXmlMethodforTraverseViewGroup.SelectNodes:
+                    xmlNodeList = xmlElement.SelectNodes("//Button");//case-sensitive
+                    break;
+                case chooseAXmlMethodforTraverseViewGroup.SelectNodes_XmlNamespaceManager:
+                    XmlNamespaceManager xmlNamespaceManager = new XmlNamespaceManager(doc.NameTable);
+                    xmlNamespaceManager.AddNamespace("android", "http://schemas.android.com/apk/res/android");
+                    xmlNodeList = xmlElement.SelectNodes("//Button", xmlNamespaceManager);
+                    break;
+                default:
+                    break;
+            }
+            if (xmlNodeList.Count != doc.ChildNodes.Count)//因為以doc.ChildNodes初始化故
+            {
+                foreach (XmlNode item in xmlNodeList)
                 {
-                    //if (xa.Name=="p0:contentDescription")
-                    if (xa.Name.Contains("contentDescription"))
+                    XmlAttribute attributeContentDescription = item.Attributes["p0:contentDescription"];
+                    if (attributeContentDescription != null)//具有指定名稱的屬性。 如果屬性 (attribute) 不存在，這個屬性 (property) 會傳回 null。https://docs.microsoft.com/zh-tw/dotnet/api/system.xml.xmlattributecollection.itemof?view=netcore-3.1#System_Xml_XmlAttributeCollection_ItemOf_System_String_
                     {
-                        string contentDescription = item.Attributes["p0:contentDescription"].Value;
-                        if (contentDescription != null
-                            && contentDescription.Contains("@"+Resource.String.buttonNum))
+                        string valueAttributeContentDescription = attributeContentDescription.Value;
+                        if (valueAttributeContentDescription != null &&
+                            valueAttributeContentDescription.Contains//如果是數字按鈕
+                                (Convert.ToString(Resource.String.buttonNum)))//因屬性值前有1個「@」
                         {
-                            FindViewById<Button>                                
-                                (int.Parse(item.Attributes["p0:id"].Value.Substring(1)))
-                                .Enabled=false;//Name="p0:id", Value="@2131230760"//要去掉首位「@」符
-                            break;
+                            FindViewById<Button>(int.Parse(item.Attributes["p0:id"].Value.Substring
+                                (1))).Enabled = setEnabled;
                         }
-                    } 
+                    }
                 }
             }
         }
 
+        ////用XmlDocument.GetElementsByTagName 方法來遍歷巡覽View https://docs.microsoft.com/zh-tw/dotnet/api/system.xml.xmldocument.getelementsbytagname?view=netcore-3.1#System_Xml_XmlDocument_GetElementsByTagName_System_String_
+        //void traverseViewGroup_GetElementsByTagName_EnabledFalse()
+        //{
+        //    XmlDocument doc = new XmlDocument();
+        //    //XmlReader xmrder = Application.Resources.GetLayout(2131427356);
+        //    XmlReader xmrder = Application.Resources.GetLayout(Resource.Layout.activity_game);
+        //    doc.Load(xmrder);
+        //    //下列網頁說明所示的R類別，其實是Java中的實作，在C#中則是如上，直接用「Resources」這個類別，就是R類別！
+        //    //doc=R.layout.activity_game;// error :https://developer.android.com/guide/topics/resources/accessing-resources#ResourcesFromCode
 
-        //〈Android 算法：遍历ViewGroup找出所有子View〉https://blog.csdn.net/l707941510/article/details/82912526
+        //    XmlNodeList xmlNodeList = doc.GetElementsByTagName("Button");
+        //    foreach (XmlNode item in xmlNodeList)
+        //    {
+        //        XmlAttribute xAtt = item.Attributes["p0:contentDescription"];
+        //        if (xAtt != null)
+        //        {
+        //            //以上2行為優化，與下2行等效
+        //            //foreach (XmlAttribute xa in item.Attributes)
+        //            //{
+        //            //    //if (xa.Name=="p0:contentDescription")//與以下一行同
+        //            //    if (xa.Name.Contains("contentDescription"))
+        //            //    {
+        //            //string contentDescription = item.Attributes["p0:contentDescription"].Value;
+        //            string contentDescription = xAtt.Value;
+        //            if (contentDescription != null
+        //                && contentDescription.Contains("@" + Resource.String.buttonNum))
+        //            {
+        //                FindViewById<Button>
+        //                    (int.Parse(item.Attributes["p0:id"].Value.Substring(1)))
+        //                    .Enabled = false;//Name="p0:id", Value="@2131230760"//要去掉首位「@」符
+        //                                     //break; //foreach (XmlAttribute xa in item.Attributes)
+        //            }
+        //            //    } 
+        //            //}
+        //        }
+        //    }
+        //}
+
+
+        //用遞迴。〈Android 算法：遍历ViewGroup找出所有子View〉https://blog.csdn.net/l707941510/article/details/82912526
         int traverseViewGroup_recursion_EnabledFalse(View view)
         {
             if (view == null) return 0;
@@ -246,6 +320,8 @@ namespace GuessGameAndroidPractise
             return viewCount;
 
         }
+
+        //不用遞迴（recursion）
         int traverseViewGroup_EnabledFalse(View view)
         {
             if (view == null) return 0;
