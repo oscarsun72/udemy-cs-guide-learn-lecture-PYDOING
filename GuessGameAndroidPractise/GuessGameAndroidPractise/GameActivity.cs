@@ -155,8 +155,7 @@ namespace GuessGameAndroidPractise
             textView.TextSize = 26;
 
             //將數字按鈕設定為無效，不可按下：
-            setButtonEnabled_traverse_any_view_hierarchy_in_android(
-                whatTraverseMethodToBeRun.xml, false);
+            setNumBtnEnabled(false);
 
             //準備返回主表單（主視圖）用
             Intent main = new Intent(this, typeof(MainActivity));
@@ -173,8 +172,7 @@ namespace GuessGameAndroidPractise
             btnNewGame.Click += (sender, e) =>
             {
                 //數字按鈕生效
-                setButtonEnabled_traverse_any_view_hierarchy_in_android(
-                    whatTraverseMethodToBeRun.xml, true);//準備開始遊戲
+                setNumBtnEnabled(true);//準備開始遊戲
                 //顯示提示文字
                 textView.Text = Application.GetString(
                     Resource.String.game_started);
@@ -195,15 +193,30 @@ namespace GuessGameAndroidPractise
 
         }
 
-        enum whatTraverseMethodToBeRun
+        public enum whatTraverseMethodToBeRun
         {
             xml, recursion, withoutRecursion
         }
 
-        void setButtonEnabled_traverse_any_view_hierarchy_in_android(
-            whatTraverseMethodToBeRun method, bool setEnabled,
+        void setNumBtnEnabled(bool setEnabled)
+        {
+            List<View> vList = new List<View>();
+            FindViewsWithText(ref vList,whatTraverseMethodToBeRun.xml);
+            foreach (View item in vList)
+            {
+                item.Enabled = setEnabled;
+            }
+        }
+
+        //巡覽遍歷想要找的View，並取得List<View>，以便於對此群組作統一的操作
+        public void FindViewsWithText(//traverse_any_view_hierarchy_in_android
+            ref List<View> vList ,whatTraverseMethodToBeRun method,
             chooseAXmlMethodforTraverseViewGroup c
-                =chooseAXmlMethodforTraverseViewGroup.SelectNodes)
+                =chooseAXmlMethodforTraverseViewGroup.SelectNodes,
+            string contentDescription = "buttonNum",
+            string nodeForGot = "Button", string attributeName = "contentDescription",
+            int attributevalue = Resource.String.buttonNum,
+            int layoutID = Resource.Layout.activity_game)
         {
             //凡4種方式來巡覽遍歷所有的 View Button：
             switch (method)
@@ -214,7 +227,8 @@ namespace GuessGameAndroidPractise
                         case chooseAXmlMethodforTraverseViewGroup.GetElementsByTagName:
                         case chooseAXmlMethodforTraverseViewGroup.SelectNodes:
                         case chooseAXmlMethodforTraverseViewGroup.SelectNodes_XmlNamespaceManager:
-                            traverseViewGroup_Xml_Enabled(c,setEnabled);
+                            traverseViewGroup_Xml(ref vList,c,nodeForGot
+                                ,attributeName,attributevalue,layoutID);
                             break;
                         default:
                             break;
@@ -222,11 +236,13 @@ namespace GuessGameAndroidPractise
                     break;
                 case whatTraverseMethodToBeRun.recursion:
                     View view = FindViewById<LinearLayout>(Resource.Id.linearLayoutGame);
-                    int viewsCount = traverseViewGroup_recursion_EnabledFalse(view,setEnabled);//遞歸（recursion）
+                    int viewsCount = traverseViewGroup_recursion(ref vList,
+                        view,contentDescription );//遞歸（recursion）
                     break;
                 case whatTraverseMethodToBeRun.withoutRecursion:
                     View v = FindViewById<LinearLayout>(Resource.Id.linearLayoutGame);
-                    int viewsCnt = traverseViewGroup_EnabledFalse(v,setEnabled);//不遞迴（recursion）
+                    int viewsCnt = traverseViewGroup(ref vList,
+                        v,contentDescription);//不遞迴（recursion）
                     break;
                 default:
                     break;
@@ -236,30 +252,35 @@ namespace GuessGameAndroidPractise
 
         }
 
-        enum chooseAXmlMethodforTraverseViewGroup
+        public enum chooseAXmlMethodforTraverseViewGroup
         {
             GetElementsByTagName, SelectNodes, SelectNodes_XmlNamespaceManager
         }
 
         //用Xml提供的方法來遍歷巡覽View https://docs.microsoft.com/zh-tw/dotnet/api/system.xml.xmlnode.selectnodes?view=netcore-3.1
-        void traverseViewGroup_Xml_Enabled(chooseAXmlMethodforTraverseViewGroup c, bool setEnabled)
+        void traverseViewGroup_Xml(ref List<View>vList,
+            chooseAXmlMethodforTraverseViewGroup c,
+            string nodeForGot="Button",string attributeName= "contentDescription",
+            int attributevalue = Resource.String.buttonNum,
+            int layoutID = Resource.Layout.activity_game             
+            )
         {
             XmlDocument doc = new XmlDocument();
-            doc.Load(Application.Resources.GetLayout(Resource.Layout.activity_game));
+            doc.Load(Application.Resources.GetLayout(layoutID));
             XmlElement xmlElement = doc.DocumentElement;
             XmlNodeList xmlNodeList = doc.ChildNodes;
             switch (c)
             {
                 case chooseAXmlMethodforTraverseViewGroup.GetElementsByTagName:
-                    xmlNodeList = doc.GetElementsByTagName("Button");
+                    xmlNodeList = doc.GetElementsByTagName(nodeForGot);
                     break;
                 case chooseAXmlMethodforTraverseViewGroup.SelectNodes:
-                    xmlNodeList = xmlElement.SelectNodes("//Button");//case-sensitive
+                    xmlNodeList = xmlElement.SelectNodes("//" + nodeForGot);//case-sensitive
                     break;
                 case chooseAXmlMethodforTraverseViewGroup.SelectNodes_XmlNamespaceManager:
                     XmlNamespaceManager xmlNamespaceManager = new XmlNamespaceManager(doc.NameTable);
                     xmlNamespaceManager.AddNamespace("android", "http://schemas.android.com/apk/res/android");
-                    xmlNodeList = xmlElement.SelectNodes("//Button", xmlNamespaceManager);
+                    xmlNodeList = xmlElement.SelectNodes("//"+ nodeForGot, xmlNamespaceManager);
                     break;
                 default:
                     break;
@@ -268,16 +289,17 @@ namespace GuessGameAndroidPractise
             {
                 foreach (XmlNode item in xmlNodeList)
                 {
-                    XmlAttribute attributeContentDescription = item.Attributes["p0:contentDescription"];
+                    XmlAttribute attributeContentDescription = item.Attributes["p0:"+attributeName];
                     if (attributeContentDescription != null)//具有指定名稱的屬性。 如果屬性 (attribute) 不存在，這個屬性 (property) 會傳回 null。https://docs.microsoft.com/zh-tw/dotnet/api/system.xml.xmlattributecollection.itemof?view=netcore-3.1#System_Xml_XmlAttributeCollection_ItemOf_System_String_
                     {
                         string valueAttributeContentDescription = attributeContentDescription.Value;
                         if (valueAttributeContentDescription != null &&
                             valueAttributeContentDescription.Contains//如果是數字按鈕
-                                (Convert.ToString(Resource.String.buttonNum)))//因屬性值前有1個「@」
+                                (Convert.ToString(attributevalue)))//因屬性值前有1個「@」
                         {
-                            FindViewById<Button>(int.Parse(item.Attributes["p0:id"].Value.Substring
-                                (1))).Enabled = setEnabled;
+                            vList.Add(FindViewById<Button>
+                                (int.Parse(item.Attributes["p0:id"].Value
+                                    .Substring(1))));
                         }
                     }
                 }
@@ -324,7 +346,8 @@ namespace GuessGameAndroidPractise
 
 
         //用遞迴。〈Android 算法：遍历ViewGroup找出所有子View〉https://blog.csdn.net/l707941510/article/details/82912526
-        int traverseViewGroup_recursion_EnabledFalse(View view,bool setEnabled)
+        int traverseViewGroup_recursion(ref List<View> vList,
+            View view,string contentDescription="buttonNum")//Passing Parameters (C# Programming Guide):https://docs.microsoft.com/zh-tw/dotnet/csharp/programming-guide/classes-and-structs/passing-parameters
         {
             if (view == null) return 0;
             int viewCount = 0;//宣告應該在遞歸（recursion）時不會被覆寫，因其有int冠前也
@@ -340,16 +363,16 @@ namespace GuessGameAndroidPractise
                     {
                         //遞歸（recursion）
                         viewCount +=
-                            traverseViewGroup_recursion_EnabledFalse(
-                                vw,setEnabled);
+                            traverseViewGroup_recursion(
+                                ref vList, vw,contentDescription);
                     }
                     else
                     {
                         viewCount++;
-                        var contentDescription = vw.ContentDescription;
-                        if (contentDescription != null &&
-                            contentDescription.IndexOf("buttonNum") > -1)
-                            vw.Enabled = setEnabled;
+                        var cntDscrpt= vw.ContentDescription;
+                        if (cntDscrpt != null &&
+                            cntDscrpt.IndexOf(contentDescription) > -1)
+                            vList.Add(vw);
 
                     }
                 }
@@ -357,17 +380,19 @@ namespace GuessGameAndroidPractise
             else
             {
                 viewCount++;
-                var contentDescription = view.ContentDescription;
-                if (contentDescription != null
-                    && contentDescription.IndexOf("buttonNum") > -1)
-                    view.Enabled = setEnabled;
+                var cntDscrpt = view.ContentDescription;
+                if (cntDscrpt != null
+                    && cntDscrpt.IndexOf(contentDescription) > -1)
+                    vList.Add(view);
             }
             return viewCount;
 
         }
 
         //不用遞迴（recursion）
-        int traverseViewGroup_EnabledFalse(View view, bool setEnabled)
+        int traverseViewGroup(
+                ref List<View> vList, View view, 
+                string contentDescription = "buttonNum")
         {
             if (view == null) return 0;
             int viewCount = 0;
@@ -391,10 +416,10 @@ namespace GuessGameAndroidPractise
                         else
                         {
                             viewCount++;
-                            var contentDescription = vw.ContentDescription;
-                            if (contentDescription != null &&
-                                contentDescription.IndexOf("buttonNum") > -1)
-                                vw.Enabled = setEnabled;
+                            var cntDscrp = vw.ContentDescription;
+                            if (cntDscrp != null &&
+                                cntDscrp.IndexOf(contentDescription) > -1)
+                                vList.Add(vw);
                         }
                     }
 
@@ -403,10 +428,10 @@ namespace GuessGameAndroidPractise
             else
             {
                 viewCount++;
-                var contentDescription = view.ContentDescription;
-                if (contentDescription != null &&
-                    contentDescription.IndexOf("buttonNum") > -1)
-                    view.Enabled = setEnabled;
+                var cntDscrp = view.ContentDescription;
+                if (cntDscrp != null &&
+                    cntDscrp.IndexOf(contentDescription) > -1)
+                    vList.Add(view);
             }
 
             return viewCount;
