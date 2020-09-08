@@ -22,6 +22,8 @@ using Android.Widget;
 //using Java.Util;
 //using Android.Support.V7.Content.Res;
 //using System.ComponentModel;
+using GuessGame;
+using Java.Lang;
 
 namespace GuessGameAndroidPractise
 {
@@ -139,6 +141,17 @@ namespace GuessGameAndroidPractise
     [Activity(Label = "GameActivity")]
     public class GameActivity : Activity
     {
+        byte _digit = 3;//要猜的位數.https://docs.microsoft.com/zh-tw/dotnet/csharp/language-reference/builtin-types/integral-numeric-types
+        //取得了所有數字按鈕
+        List<View> vBtnNumList = new List<View>();
+        Guess guess;
+        TextView textView;//顯示提示文字窗格
+        byte keyCntr = 0;//計算輸入次數
+        string answer = "";//輸入的答案
+        ScrollView ScrollView;
+        //數字按鈕的事件程序，這也要用到遍歷巡覽Button，所以遍歷巡覽操作要獨立出來了
+
+
         //OnCreate就是在初始化，相當於Open、Load、Initialize
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -147,12 +160,19 @@ namespace GuessGameAndroidPractise
             // Create your application here//此則相當於 SetFocus、Activate、Show
             SetContentView(Resource.Layout.activity_game);//參考C#的資源是用Resource（沒有尾綴s），可是參考Android(Java)的資源，是用Application.Resources
 
+            //取得要猜幾位數（取得Intent.PutExtra()所附帶的資訊）//張凱慶老師菩薩是用:Convert.ToInt32(Intent.GetStringExtra("Number"));            
+            _digit = byte.Parse(Java.Lang.String.ValueOf(////https://hsinichi.pixnet.net/blog/post/5317015
+                this.Intent.Extras.Get("Number")));//以鍵值（key）"Number"來取得,如C++的map容器
+            //以取得的位數，來初始化Guess類別物件guess
+            guess = new Guess(_digit);
+
             //設定進入此畫面（活頁Activity）時所要顯示的指示文字
-            TextView textView = FindViewById<TextView>(
+            textView = FindViewById<TextView>(
                 Resource.Id.scrollViewTextV);
             textView.Text = Application.GetString(
                 Resource.String.game_start);
             textView.TextSize = 26;
+            ScrollView = FindViewById<ScrollView>(Resource.Id.scrollView);
 
             //將數字按鈕設定為無效，不可按下：
             setNumBtnEnabled(false);
@@ -173,29 +193,73 @@ namespace GuessGameAndroidPractise
             {
                 //數字按鈕生效
                 setNumBtnEnabled(true);//準備開始遊戲
+                //重設遊戲
+                guess = new Guess(_digit);keyCntr = 0;
                 //顯示提示文字
-                textView.Text = Application.GetString(
-                    Resource.String.game_started);
+                if (textView.Text == Application.GetString(
+                        Resource.String.game_start))
+                    textView.Text = Application.GetString(
+                        Resource.String.game_started);
+                else
+                    textView.Text += "\n" +
+                        Application.GetString(Resource.String.game_started);
+                ScrollView.FullScroll(FocusSearchDirection.Down);
             };
 
-
+            //設定數字按鈕的事件程序
+            if (vBtnNumList.Count == 0)
+            {
+                MyViewGroup myViewGroup = new MyViewGroup(this);
+                myViewGroup.FindViewsWithText(
+                    ref vBtnNumList, MyViewGroup.whatTraverseMethodToBeRun.xml);
+            }
+            //取得了所有數字按鈕vBtnNumList後,掛上數字按鈕的事件程序
+            foreach (View item in vBtnNumList)
+            {
+                item.Click += btnNumEvent;
+            }
 
         }
 
-        //數字按鈕的事件程序，這也要用到遍歷巡覽Button，所以遍歷巡覽操作要獨立出來了
-        void btnNumEvent()
+        void btnNumEvent(object sender, EventArgs e)
         {
 
+            Button btn = (Button)sender;
+            if (keyCntr == 0)
+            {
+                textView.Text += "\n" + btn.Text;
+            }
+            else
+                textView.Text += btn.Text;
+            ScrollView.PageScroll(FocusSearchDirection.Down);
+            keyCntr++;
+            answer += btn.Text;
+            btn.Enabled = false;
+            if (keyCntr == _digit)
+            {
+                //若輸入的數字有重複--不如輸入完即將該數字失效
+                //if (guess.findNumber())
+                guess.abCounter(answer);
+                textView.Text +=
+                        $"\n猜對{guess.A}個,猜錯{guess.B}個" +
+                        $"答案是：{guess.Answer}\n";
+                        //"\n總共猜對" + guess.A + "個，猜錯" +
+                        //guess.B + "個。答案是：" + guess.Answer + "\n";
+                //不給再按數字按鈕了
+                setNumBtnEnabled(false);
+                keyCntr = 0;//計算輸入位數的歸零
+                answer = "";
+                ScrollView.FullScroll(FocusSearchDirection.Down);
+            }            
         }
 
-         //設定數字按鈕的有效性
+        //設定數字按鈕的有效性
         void setNumBtnEnabled(bool setEnabled)
         {
-            List<View> vList = new List<View>();
             MyViewGroup myViewGroup = new MyViewGroup(this);
-            myViewGroup.FindViewsWithText(ref vList,
-                MyViewGroup.whatTraverseMethodToBeRun.withoutRecursion);
-            foreach (View item in vList)
+            myViewGroup.FindViewsWithText(ref vBtnNumList,
+                MyViewGroup.whatTraverseMethodToBeRun.xml);
+            foreach (View item in vBtnNumList)
             {
                 item.Enabled = setEnabled;
             }

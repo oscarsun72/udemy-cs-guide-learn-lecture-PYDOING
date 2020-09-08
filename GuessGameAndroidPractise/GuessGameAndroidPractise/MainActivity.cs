@@ -30,6 +30,7 @@ namespace GuessGameAndroidPractise
         void startGame(object sender,EventArgs e){
             Button btn = (Button)sender;
             Intent game = new Intent(this, typeof(GameActivity));
+            //傳送要附帶的資訊給要開啟的活頁對象（Activity,表單）
             game.PutExtra("Number",btn.Text) ;
             StartActivity(game);
         }

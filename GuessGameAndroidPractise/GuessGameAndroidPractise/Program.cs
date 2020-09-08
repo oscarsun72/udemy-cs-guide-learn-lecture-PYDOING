@@ -39,6 +39,7 @@ namespace GuessGame
             }
             return new string(s_array);
         }
+        //檢查是否有重複輸入
         internal bool findNumber(string number)
         {
             int i = 0;
@@ -56,6 +57,8 @@ namespace GuessGame
             }
             return false;
         }
+
+        //計算猜對數a，和猜錯次數b
         internal void abCounter(string guess)
         {
             //a:記下猜對之數，b：猜錯幾次
@@ -71,6 +74,7 @@ namespace GuessGame
             }
 
         }
+        //這是給主控台程式用的
         public void run()
         {
             string guess = "";
