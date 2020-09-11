@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-//using System.IO;
-using System.Linq;
-//using System.Reflection;
+﻿//using System.Reflection;
 //using System.Text;
-using System.Xml;//XmlDocument.GetElementsByTagName 方法要用
 //using Android.Animation;
 using Android.App;
 using Android.Content;
-using Android.Drm;
 //using Android.Icu.Text;
 using Android.OS;
 //using Android.Runtime;
@@ -23,7 +16,10 @@ using Android.Widget;
 //using Android.Support.V7.Content.Res;
 //using System.ComponentModel;
 using GuessGame;
-using Java.Lang;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+//using System.IO;
 
 namespace GuessGameAndroidPractise
 {
@@ -160,8 +156,10 @@ namespace GuessGameAndroidPractise
             // Create your application here//此則相當於 SetFocus、Activate、Show
             SetContentView(Resource.Layout.activity_game);//參考C#的資源是用Resource（沒有尾綴s），可是參考Android(Java)的資源，是用Application.Resources
 
+
             //取得要猜幾位數（取得Intent.PutExtra()所附帶的資訊）//張凱慶老師菩薩是用:Convert.ToInt32(Intent.GetStringExtra("Number"));            
             _digit = byte.Parse(Java.Lang.String.ValueOf(////https://hsinichi.pixnet.net/blog/post/5317015
+
                 this.Intent.Extras.Get("Number")));//以鍵值（key）"Number"來取得,如C++的map容器
             //以取得的位數，來初始化Guess類別物件guess
             guess = new Guess(_digit);
@@ -190,21 +188,21 @@ namespace GuessGameAndroidPractise
             //準備對「新遊戲」按鈕操作用
             Button btnNewGame = FindViewById<Button>(Resource.Id.buttonNewGame);
             btnNewGame.Click += (sender, e) =>
-            {
-                //數字按鈕生效
-                setNumBtnEnabled(true);//準備開始遊戲
-                //重設遊戲
-                guess = new Guess(_digit);keyCntr = 0;
-                //顯示提示文字
-                if (textView.Text == Application.GetString(
-                        Resource.String.game_start))
-                    textView.Text = Application.GetString(
-                        Resource.String.game_started);
-                else
-                    textView.Text += "\n" +
-                        Application.GetString(Resource.String.game_started);
-                ScrollView.FullScroll(FocusSearchDirection.Down);
-            };
+                    {
+                        //數字按鈕生效
+                        setNumBtnEnabled(true);//準備開始遊戲
+                                               //重設遊戲
+                        guess = new Guess(_digit); keyCntr = 0;
+                        //顯示提示文字
+                        if (textView.Text == Application.GetString(
+                                        Resource.String.game_start))
+                            textView.Text = Application.GetString(
+                                Resource.String.game_started);
+                        else
+                            textView.Text += "\n" +
+                                Application.GetString(Resource.String.game_started);
+                        ScrollView.FullScroll(FocusSearchDirection.Down);
+                    };
 
             //設定數字按鈕的事件程序
             if (vBtnNumList.Count == 0)
@@ -220,6 +218,7 @@ namespace GuessGameAndroidPractise
             }
 
         }
+
 
         void btnNumEvent(object sender, EventArgs e)
         {
@@ -243,14 +242,14 @@ namespace GuessGameAndroidPractise
                 textView.Text +=
                         $"\n猜對{guess.A}個,猜錯{guess.B}個" +
                         $"答案是：{guess.Answer}\n";
-                        //"\n總共猜對" + guess.A + "個，猜錯" +
-                        //guess.B + "個。答案是：" + guess.Answer + "\n";
+                //"\n總共猜對" + guess.A + "個，猜錯" +
+                //guess.B + "個。答案是：" + guess.Answer + "\n";
                 //不給再按數字按鈕了
                 setNumBtnEnabled(false);
                 keyCntr = 0;//計算輸入位數的歸零
                 answer = "";
-                ScrollView.FullScroll(FocusSearchDirection.Down);
-            }            
+                ScrollView.FullScroll(FocusSearchDirection.Down);//在此無效
+            }
         }
 
         //設定數字按鈕的有效性
@@ -271,8 +270,8 @@ namespace GuessGameAndroidPractise
             //將數字按鈕設定為無效，不可按下：
             Button btn = FindViewById<Button>(Resource.Id.button1);
             int i = 0; //以後再研究ViewGroup
-            //ViewGroup thisViews = (ViewGroup) FindViewById(Android.Resource.Id.Content);            
-            //LinearLayout就是一種ViewGroup，其實就是View的容器（container）
+                       //ViewGroup thisViews = (ViewGroup) FindViewById(Android.Resource.Id.Content);            
+                       //LinearLayout就是一種ViewGroup，其實就是View的容器（container）
             LinearLayout gameLayout = FindViewById<LinearLayout>
                 (Resource.Id.linearLayoutGame);
             //LinearLayout gameLayout = FindViewById<LinearLayout>
